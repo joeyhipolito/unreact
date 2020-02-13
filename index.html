@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>store.selectors</title>
+</head>
+<body>
+
+
+  <script src="https://unpkg.com/babel-standalone@6.26.0/babel.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.15/lodash.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reselect/4.0.0/reselect.min.js"></script>
+
+
+  <script>
+    const {
+      filter, find, findIndex, every, includes,
+      eq, gt, gte, lt, lte,
+      isString,
+      union
+    } = _;
+
+    const {
+      createSelector
+    } = Reselect;
+
+
+    const getConfig = state => state.config
+    const getBlocks = state => state.data
+    const getUserData = state => state.userdata
+    const getBlockById = (state, id) => find(state.data, { id: id })
+    const getDestinationUrls = state => state.destinations
+
+    const getActiveBlock = createSelector(
+      [getBlocks],
+      blocks => find(blocks, { active: true })
+    );
+
+    const getActiveBlockIndex = createSelector(
+      [getBlocks, getActiveBlock],
+      (blocks, activeBlock) => findIndex(blocks, activeBlock)
+    );
+
+    const getCompleteBlocks = createSelector(
+      [getBlocks],
+      blocks => filter(blocks, { complete: true })
+    );
+
+    const getHiddenBlocks = createSelector(
+      [getBlocks],
+      blocks => filter(blocks, { hidden: true })
+    );
+
+    const getQuestions = createSelector(
+      [getActiveBlock],
+      block => block.Questions
+    );
+
+    const getHiddenQuestions = createSelector(
+      [getQuestions],
+      questions => filter(questions, { hidden: true })
+    );
+
+    const getCompleteQuestions = createSelector(
+      [getQuestions],
+      questions => filter(questions, { complete: true })
+    );
+
+    const getCompleteOrHiddenQuestions = createSelector(
+      [getHiddenQuestions, getCompleteQuestions],
+      (hidden, complete) => union(hidden, complete)
+    );
+
+    const getIsEndOfFlow = createSelector(
+      [getBlocks, getCompleteBlocks],
+      (blocks, completeBlocks) => blocks.length === completeBlocks.length
+    );
+
+    const getIsEndOfBlock = createSelector(
+      [getQuestions, getCompleteOrHiddenQuestions],
+      (questions, hiddenOrComplete) => questions.length === hiddenOrComplete.length
+    );
+
+    const getActiveBlockHasWall = createSelector(
+      [getActiveBlock],
+      block => !isEmpty(block.Walls)
+    );
+
+    const getBlockStartQuestion = createSelector(
+      [getQuestions],
+      questions => find(questions, questions => !question.hidden)
+    );
+
+    const getIsStartOfBlock = createSelector(
+      [getActiveQuestion],
+      (questions, hiddenOrComplete) => questions.length === hiddenOrComplete.length
+    );
+
+    const getIsEnrollmentReady = createSelector(
+      []
+    );
+
+    const getActiveQuestion = createSelector(
+      [getQuestions],
+      questions => find(questions, { active: true })
+    );
+
+    const getActiveQuestionTag = createSelector(
+      [getActiveQuestion],
+      question => question.Tag
+    );
+
+    const getActiveQuestionIndex = createSelector(
+      [getQuestions, getActiveQuestion],
+      (blocks, activeBlock) => findIndex(blocks, activeBlock)
+    );
+
+    const getUnsyncedUserData = createSelector(
+      [getUserData],
+      userdata => filter(userdata, { synced: false })
+    );
+
+    const getFilters = createSelector(
+      [getQuestions],
+      questions => questions.Filters
+    );
+
+    const getActiveQuestionShouldShow = createSelector(
+      [getActiveQuestion, getUserData],
+      (question, data) => _evaluateFilters(question.Filters, data)
+    );
+
+
+    // UTILITIES
+    const _evaluateFilters = (filters, data) => {
+      const _evaluator = (data, prop, filterValue) => {
+        const dataValue = isString(data.value) ? data.value : data.value.toString();
+        return !prop ? false : {
+          '=': (data, value) => eq(data, value),
+          '!=': (data, value) => !eq(data, value),
+          '>': (data, value) => gt(data, value),
+          '>=': (data, value) => gte(data, value),
+          '<': (data, value) => lt(data, value),
+          '<=': (data, value) => lte(data, value),
+          'in': (data, value) => includes(value.split(','), data),
+          'not_in': (data, value) => !includes(value.split(','), data)
+        }[prop](dataValue, filterValue);
+      };
+
+      return every(filters, filter => {
+        return _evaluator(find(data, { key: filter.Field }), filter.Control, filter.Value);
+      });
+    };
+
+    const initialState = {
+      token: 'abcdefg',
+      enrollmentBlockIndex: 3,
+      userdata: [
+        { key: 'name', value: 'joey', synced: true },
+        { key: 'age', value: 21, synced: false }
+      ],
+      data: [
+        { id: 'x', complete: true, hidden: true },
+        { id: 'y', complete: true, hidden: false },
+        { id: 'z', complete: false, hidden: true, active: true,
+          Questions: [
+            { id: 1, active: false, complete: true },
+            { id: 2, active: false, complete: true },
+            { id: 3, active: false, complete: true },
+            { id: 4, active: false, hidden: true, complete: true },
+            { id: 5, active: true, Filters: [
+              { Field: 'age', Value: '20', Control: '>' }
+            ]}
+          ]
+        }
+      ]
+    };
+
+    console.log(getIsEndOfBlock(initialState))
+
+  </script>
+</body>
+</html>
+
+<!--
+  why would a question be hidden?
+   - it is a "triggered" question
+
+
+
+
+
+ -->
