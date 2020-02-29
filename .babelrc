@@ -9,6 +9,11 @@
     ]
   ],
   "plugins": [
+    ["@babel/plugin-transform-react-jsx", {
+      "pragma": "Unreact.createElement",
+      "throwIfNamespace": false
+    }],
+    ["@babel/plugin-proposal-decorators", { "legacy": true }],
     "@babel/plugin-syntax-dynamic-import",
     "@babel/plugin-proposal-class-properties"
   ]

@@ -8,19 +8,24 @@ const geo = createSlice({
     error: false
   },
   reducers: {
-    setGeoDataRequest: (state, action) => {
+    getGeoDataRequest: (state, action) => {
       state.loading = true;
       state.error = false;
     },
-    setGeoData: (state, action) => {
+    getGeoDataSuccess: (state, action) => {
       state = assign(state, action.payload, { loading: false, error: false });
     },
-    setGeoDataFailed: (state, action) => {
+    getGeoDataFailure: (state, action) => {
       state.loading = false;
       state.error = action.payload.message;
     }
   }
 });
 
-export const { setGeoDataRequest, setGeoData, setGeoDataFailed } = geo.actions;
+export const {
+  getGeoDataRequest,
+  getGeoDataSuccess,
+  getGeoDataFailure
+} = geo.actions;
+
 export default geo.reducer;
