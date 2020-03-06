@@ -1,5 +1,5 @@
-import Unreact from './lib/unreact';
-import store from './lib/store';
+import unreact from './lib/unreact';
+import store from './store';
 
 import App from './app';
 
@@ -7,4 +7,4 @@ const Main = (
   <App store={store} />
 );
 
-Unreact.render(Main, document.getElementById('app'));
+unreact.render(Main, document.getElementById('app'));

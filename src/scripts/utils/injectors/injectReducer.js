@@ -1,4 +1,4 @@
-import Unreact from '../../lib/unreact';
+import unreact from '../../lib/unreact';
 
 import { isArray, forEach } from 'lodash';
 import getInjectors from './reducerInjectors';
@@ -7,7 +7,7 @@ export default reducers => WrappedComponent => {
 
   reducers = isArray(reducers) ? reducers : [reducers];
 
-  class InjectReducer extends Unreact.Component {
+  class InjectReducer extends unreact.Component {
     constructor(props) {
       super(props);
       forEach(reducers, ({ key, reducer }) => {

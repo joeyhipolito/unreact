@@ -1,18 +1,13 @@
 import { forEach } from 'lodash';
 import { compose } from '@reduxjs/toolkit';
 
-import Unreact from './lib/unreact';
+import unreact from './lib/unreact';
 import { injectReducer, injectSaga } from './utils/injectors';
 
-import geoReducer, { getGeoDataRequest } from './utils/geo';
-import uaReducer, { getUserAgentDataStart } from './utils/ua';
-import configReducer, { getConfigStart } from './utils/config';
-import routeReducer, { getInitialRouteDataStart } from './utils/route';
-
-import geoSaga from './sagas/geoSaga';
-import uaSaga from './sagas/uaSaga';
-import configSaga from './sagas/configSaga';
-import routeSaga from './sagas/routeSaga';
+import uaReducer, { uaSaga, getUserAgentDataStart } from './utils/ua';
+import geoReducer, { geoSaga, getGeoDataRequest } from './utils/geo';
+import routeReducer, { routeSaga, getInitialRouteDataStart } from './utils/route';
+import configReducer, { configSaga, getConfigStart } from './utils/config';
 
 export default @compose(
   injectReducer([
@@ -28,8 +23,8 @@ export default @compose(
     { key: 'route', saga: routeSaga },
   ])
 )
-class App extends Unreact.Component {
-// export default class App extends Unreact.Component {
+class App extends unreact.Component {
+// export default class App extends unreact.Component {
   constructor(props) {
     super(props);
     this._initializeState(props.store);
@@ -43,9 +38,9 @@ class App extends Unreact.Component {
 
   _initializeState(store) {
     const requiredReducers = [
+      getConfigStart,
       getGeoDataRequest,
       getUserAgentDataStart,
-      getConfigStart,
       getInitialRouteDataStart
     ];
 

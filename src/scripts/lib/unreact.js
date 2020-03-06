@@ -59,10 +59,10 @@ export class Component {
 
 Component.prototype.isClassComponent = true;
 
-const Unreact = {
+const unreact = {
   createElement,
   render,
   Component
 };
 
-export default Unreact;
+export default unreact;

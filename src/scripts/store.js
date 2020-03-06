@@ -2,8 +2,8 @@ import { createStore } from 'redux';
 import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit';
 import createSagaMiddleware from 'redux-saga';
 
-import { createInjectorsEnhancer } from '../utils/injectors';
-import createReducer from '../reducers';
+import { createInjectorsEnhancer } from './utils/injectors';
+import createReducer from './reducers';
 
 const sagaMiddleware = createSagaMiddleware();
 const runSaga = sagaMiddleware.run;
