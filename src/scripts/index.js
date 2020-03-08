@@ -1,10 +1,7 @@
-import unreact from './lib/unreact';
+import unreact from '~/common/lib/unreact';
+import history from '~/common/utils/history';
 import store from './store';
 
 import App from './app';
 
-const Main = (
-  <App store={store} />
-);
-
-unreact.render(Main, document.getElementById('app'));
+unreact.render(<App store={store} history={history}/>, document.getElementById('app'));

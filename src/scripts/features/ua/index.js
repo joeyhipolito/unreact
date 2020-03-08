@@ -7,10 +7,10 @@ const uaSlice = createSlice({
   name: 'ua',
   initialState: {},
   reducers: {
-    getUserAgentDataStart: (state, action) => {
+    getUserAgentDataRequest: (state, action) => {
       state = assign(state, action.payload);
     },
-    getUserAgentData: (state, action) => {
+    getUserAgentDataSuccess: (state, action) => {
       state = assign(state, action.payload);
     },
     getUserAgentDataFailure: (state, action) => {
@@ -20,22 +20,26 @@ const uaSlice = createSlice({
 });
 
 export const {
-  getUserAgentDataStart,
-  getUserAgentData,
+  getUserAgentDataRequest,
+  getUserAgentDataSuccess,
   getUserAgentDataFailure
 } = uaSlice.actions;
+
+export const GET_UA_REQUEST = getUserAgentDataRequest.toString();
+export const GET_UA_SUCCESS = getUserAgentDataSuccess.toString();
+export const GET_UA_FAILURE = getUserAgentDataFailure.toString();
 
 function* getUa(action) {
   try {
     const ua = new UA().getResult();
-    yield put({ type: getUserAgentData.toString(), payload: ua });
+    yield put({ type: GET_UA_SUCCESS, payload: ua });
   } catch (e) {
-    yield put({ type: getUserAgentDataFailure.toString(), payload: e.message });
+    yield put({ type: GET_UA_FAILURE, payload: e.message });
   }
 }
 
 export function* uaSaga() {
-  yield takeLatest(getUserAgentDataStart.toString(), getUa);
+  yield takeLatest(GET_UA_REQUEST, getUa);
 }
 
 export default uaSlice.reducer;

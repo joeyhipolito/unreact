@@ -1,4 +1,4 @@
-import unreact from '../../lib/unreact';
+import unreact from '~/common/lib/unreact';
 
 import { isArray, forEach } from 'lodash';
 import getInjectors from './sagaInjectors';
