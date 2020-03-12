@@ -67,7 +67,6 @@ function* setRouteChanged(action) {
       console.error(e);
     }
   }
-
 }
 
 function* routeChangeListenerSaga() {

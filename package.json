@@ -43,6 +43,7 @@
     "axios": "^0.19.2",
     "core-js": "^3.0.1",
     "history": "^4.10.1",
+    "hoist-non-react-statics": "^3.3.2",
     "luxon": "^1.22.0",
     "nanoid": "^2.0.1",
     "qs": "^6.9.1",

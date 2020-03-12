@@ -54,7 +54,7 @@ export class Component {
     this.props = props || {};
   }
   componentDidMount() { }
-  render() { }
+  render() {}
 }
 
 Component.prototype.isClassComponent = true;

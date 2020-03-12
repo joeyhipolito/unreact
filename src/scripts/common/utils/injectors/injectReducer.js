@@ -1,3 +1,4 @@
+import hoistStatics from '~/common/utils/hoistStatics';
 import unreact from '~/common/lib/unreact';
 
 import { isArray, forEach } from 'lodash';
@@ -20,5 +21,9 @@ export default reducers => WrappedComponent => {
     }
   }
 
-  return InjectReducer;
+  // InjectReducer.prototype.statechange = WrappedComponent.prototype.statechange;
+  // InjectReducer.prototype.componentDidMount = WrappedComponent.prototype.componentDidMount;
+  // return InjectReducer;
+
+  return hoistStatics(InjectReducer, WrappedComponent);
 };

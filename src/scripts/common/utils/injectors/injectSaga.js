@@ -1,3 +1,4 @@
+import hoistStatics from '~/common/utils/hoistStatics';
 import unreact from '~/common/lib/unreact';
 
 import { isArray, forEach } from 'lodash';
@@ -19,5 +20,9 @@ export default sagas => WrappedComponent => {
       return <WrappedComponent {...this.props} />;
     }
   }
-  return InjectSaga;
+
+  // InjectSaga.prototype.statechange = WrappedComponent.prototype.statechange;
+  // InjectSaga.prototype.componentDidMount = WrappedComponent.prototype.componentDidMount;
+  // return InjectSaga;
+  return hoistStatics(InjectSaga, WrappedComponent);
 };
